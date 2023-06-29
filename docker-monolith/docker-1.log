@@ -1,0 +1,6 @@
+┌─[andrei@um690] - [~] - [29.06.2023, 14:55] - [R-0]
+└─[$] <> docker images
+REPOSITORY              TAG       IMAGE ID       CREATED         SIZE
+cmero/ubuntu-tmp-file   latest    d047b20dc05b   9 seconds ago   63.2MB
+ubuntu                  18.04     f9a80a55f492   4 weeks ago     63.2MB
+hello-world             latest    9c7a54a9a43c   7 weeks ago     13.3kB
