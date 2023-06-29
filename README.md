@@ -5,3 +5,4 @@ andrei-sergeich microservices repository
 
 * Установил ***docker***, ***docker-compose***, ***docker-machine***
 * Создал свой ```docker image```
+* Описал различия между контейнером и образом
