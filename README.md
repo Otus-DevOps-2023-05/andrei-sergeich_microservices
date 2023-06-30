@@ -58,3 +58,22 @@
 * Реализовал поднятие инстансов с помощью ```Terraform``` (на основе образа *ubuntu-1604-lts*),
 их количество задается переменной
 * Динамический инвентори генерируется с помощью ```Terraform```
+* Написал 2 плейбука ```Ansible``` для установки ```Docker``` и запуска там образа приложения
+
+  Для сборки:
+
+  * перейти в каталог **docker-monolith/infra**
+  * поднять инстанс, выполнив команды:
+
+      ``` bash
+      terraform init
+      terraform plan
+      terraform apply
+      ```
+
+  * запустить плейбуки ```Ansible``` для установки ```Docker``` и запуска там образа приложения:
+
+      ``` bash
+      ansible-playbook install_docker.yml
+      ansible-playbook start_container.yml
+      ```
