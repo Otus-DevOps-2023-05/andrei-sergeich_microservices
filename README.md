@@ -1,9 +1,8 @@
-# andrei-sergeich_microservices
-andrei-sergeich microservices repository
+# OTUS HW microservices
 
 ## ДЗ по модулю "Docker контейнеры. Docker под капотом"
 
-В ходе ДЗ выполнено:
+### В ходе ДЗ выполнено
 
 * Установил ***docker***, ***docker-compose***, ***docker-machine***
 * Создал свой ```docker image```
@@ -32,7 +31,7 @@ andrei-sergeich microservices repository
 * переключиться на удаленный докер демон в Yandex Cloud:
 
     ``` bash
-    eval $(docker-machine env <имя>)
+    eval $(docker-machine env docker-host)
     ```
 
 * собрать образ на удаленном хосте:
@@ -52,3 +51,10 @@ andrei-sergeich microservices repository
 Для проверки:
 
 * открыть в браузере <http://IP_адрес_созданной_VM:9292>
+
+### Задание со *
+
+* Все файлы находятся в каталоге **docker-monolith/infra**
+* Реализовал поднятие инстансов с помощью ```Terraform``` (на основе образа *ubuntu-1604-lts*),
+их количество задается переменной
+* Динамический инвентори генерируется с помощью ```Terraform```
