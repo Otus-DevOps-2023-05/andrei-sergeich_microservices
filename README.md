@@ -59,21 +59,32 @@
 их количество задается переменной
 * Динамический инвентори генерируется с помощью ```Terraform```
 * Написал 2 плейбука ```Ansible``` для установки ```Docker``` и запуска там образа приложения
+* Создал ```Packer```-шаблон (```packer.json```), содержащий описание VM с установленным ```Docker```
 
-  Для сборки:
+Для сборки:
 
-  * перейти в каталог **docker-monolith/infra**
-  * поднять инстанс, выполнив команды:
+* перейти в каталог **docker-monolith/infra**
+* поднять инстанс, выполнив команды:
 
-      ``` bash
-      terraform init
-      terraform plan
-      terraform apply
-      ```
+    ``` bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
 
-  * запустить плейбуки ```Ansible``` для установки ```Docker``` и запуска там образа приложения:
+* запустить плейбуки ```Ansible``` для установки ```Docker``` и запуска там образа приложения:
 
-      ``` bash
-      ansible-playbook install_docker.yml
-      ansible-playbook start_container.yml
-      ```
+    ``` bash
+    ansible-playbook install_docker.yml
+    ansible-playbook start_container.yml
+    ```
+
+Для сборки ```Packer```-образа выполнить команду:
+
+* выполнить сборку образов:
+
+    ``` bash
+    packer build -var-file=variables.json packer.json
+    ```
+
+> в ```variables.tf``` добавил переменную ```docker_image_id``` с ID образа, созданного ```Packer```'ом

@@ -23,6 +23,10 @@ variable "image_id" {
   description = "Disk image"
 }
 
+variable "docker_image_id" {
+  description = "Disk image whith Docker installed"
+}
+
 variable "subnet_id" {
   description = "Subnet"
 }

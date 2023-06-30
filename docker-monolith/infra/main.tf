@@ -8,7 +8,6 @@ provider "yandex" {
 resource "yandex_compute_instance" "reddit" {
   count = var.inst_count
   name  = "reddit-${count.index + 1}"
-#   name  = "reddit"
   zone  = var.zone
 
   resources {
