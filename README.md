@@ -15,6 +15,7 @@
 * Реализовал запуск контейнеров с другими сетевыми алиасами
 * Собрал все образы на основе Alpine Linux
 * Уменьшил размер всех образов
+* Подключил volume к контейнеру с БД
 
 Для сборки:
 
@@ -60,11 +61,12 @@
       docker build -t cmero/ui:1.0 ./ui
       ```
 
-  * создать сеть для приложения и запустить контейнеры:
+  * создать сеть и том для приложения и запустить контейнеры:
 
       ``` bash
       docker network create reddit
-      docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:5.0
+      ocker volume create reddit_db
+      docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db -v reddit_db:/data/db mongo:5.0
       docker run -d --network=reddit --network-alias=post cmero/post:1.0
       docker run -d --network=reddit --network-alias=comment cmero/comment:1.0
       docker run -d --network=reddit -p 9292:9292 cmero/ui:1.0

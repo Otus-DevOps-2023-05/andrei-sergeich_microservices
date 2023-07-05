@@ -2,8 +2,9 @@ NAME     = DOCKER-3
 USER_R   = cmero
 MONGO_V  = 5.0
 NET_NAME = reddit
+VOL_NAME = reddit_db
 
-all: pull build network run
+all: pull build net_create vol_create run
 
 pull:
 	@printf "Скачивание образа MONGO...\n"
@@ -15,13 +16,17 @@ build:
 	@docker build -t ${USER_R}/comment:1.0 ./comment
 	@docker build -t ${USER_R}/ui:1.0 ./ui
 
-network:
+net_create:
 	@printf "Создание сети ${NET_NAME}...\n"
 	@docker network create ${NET_NAME}
 
+vol_create:
+	@printf "Создание тома ${NET_NAME}...\n"
+	@docker volume create ${VOL_NAME}
+
 run:
 	@printf "Запуск всех контейнеров ${NAME}...\n"
-	@docker run -d --network=${NET_NAME} --network-alias=post_db --network-alias=comment_db mongo:${MONGO_V}
+	@docker run -d --network=${NET_NAME} --network-alias=post_db --network-alias=comment_db -v ${VOL_NAME}:/data/db mongo:${MONGO_V}
 	@docker run -d --network=${NET_NAME} --network-alias=post ${USER_R}/post:1.0
 	@docker run -d --network=${NET_NAME} --network-alias=comment ${USER_R}/comment:1.0
 	@docker run -d --network=${NET_NAME} -p 9292:9292 ${USER_R}/ui:1.0
