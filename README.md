@@ -46,7 +46,7 @@
 
 * Если утилита Make не установлена:
 
-  * скачать последний образ MongoDB:
+  * скачать НЕ последний образ MongoDB:
 
       ``` bash
       docker pull mongo:5.0
@@ -65,7 +65,7 @@
 
       ``` bash
       docker network create reddit
-      ocker volume create reddit_db
+      docker volume create reddit_db
       docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db -v reddit_db:/data/db mongo:5.0
       docker run -d --network=reddit --network-alias=post cmero/post:1.0
       docker run -d --network=reddit --network-alias=comment cmero/comment:1.0

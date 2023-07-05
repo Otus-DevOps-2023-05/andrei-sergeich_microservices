@@ -52,7 +52,7 @@ fclean:
 	@docker system prune --all --force --volumes 2>/dev/null && echo "SUCCESS: system prune" || echo "ERROR: system prune"
 	@docker network prune --force 2>/dev/null && echo "SUCCESS: network prune" || echo "ERROR: network prune"
 	@docker volume prune --force 2>/dev/null && echo "SUCCESS: volume prune" || echo "ERROR: volume prune"
-	@docker volume rm $$(docker volume ls -q)  2>/dev/null && echo "SUCCESS: volume rm" || echo "ERROR: volume rm"
+	@docker volume rm $$(docker volume ls -q) 2>/dev/null && echo "SUCCESS: volume rm" || echo "ERROR: volume rm"
 
 re:	fclean all
 
