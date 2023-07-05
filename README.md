@@ -12,6 +12,7 @@
   * comment - сервис отвечающий за написание комментариев
   * ui - веб-интерфейс, работающий с другими сервисами
 
+* Реализовал запуск контейнеров с другими сетевыми алиасами
 * Собрал все образы на основе Alpine Linux
 * Уменьшил размер всех образов
 
@@ -36,29 +37,52 @@
     eval $(docker-machine env docker-host)
     ```
 
-* скачать последний образ MongoDB:
+* Если установлена утилита Make, выполнить команду:
 
     ``` bash
-    docker pull mongo:5.0
+    make
     ```
 
-* перейти в каталог **src**
-* собрать образы с нашими сервисами:
+* Если утилита Make не установлена:
+
+  * скачать последний образ MongoDB:
+
+      ``` bash
+      docker pull mongo:5.0
+      ```
+
+  * перейти в каталог **src**
+  * собрать образы с нашими сервисами:
+
+      ``` bash
+      docker build -t cmero/post:1.0 ./post-py
+      docker build -t cmero/comment:1.0 ./comment
+      docker build -t cmero/ui:1.0 ./ui
+      ```
+
+  * создать сеть для приложения и запустить контейнеры:
+
+      ``` bash
+      docker network create reddit
+      docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:5.0
+      docker run -d --network=reddit --network-alias=post cmero/post:1.0
+      docker run -d --network=reddit --network-alias=comment cmero/comment:1.0
+      docker run -d --network=reddit -p 9292:9292 cmero/ui:1.0
+      ```
+
+* Для запуска контейнеров с другими сетевыми алиасами:
 
     ``` bash
-    docker build -t cmero/post:1.0 ./post-py
-    docker build -t cmero/comment:1.0 ./comment
-    docker build -t cmero/ui:1.0 ./ui
+    make run_2
     ```
 
-* создать сеть для приложения и запустить контейнеры:
+    либо
 
     ``` bash
-    docker network create reddit
-    docker run -d --network=reddit --network-alias=post_db --network-alias=comment_db mongo:5.0
-    docker run -d --network=reddit --network-alias=post cmero/post:1.0
-    docker run -d --network=reddit --network-alias=comment cmero/comment:1.0
-    docker run -d --network=reddit -p 9292:9292 cmero/ui:1.0
+    docker run -d --network=reddit --network-alias=post_db2 --network-alias=comment_db2 mongo:5.0
+    docker run -d --network=reddit --network-alias=post2 -e POST_DATABASE_HOST=post_db2 cmero/post:1.0
+    docker run -d --network=reddit --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 cmero/comment:1.0
+    docker run -d --network=reddit -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 cmero/ui:1.0
     ```
 
 Для проверки:

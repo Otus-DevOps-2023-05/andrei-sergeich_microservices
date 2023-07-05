@@ -26,6 +26,21 @@ run:
 	@docker run -d --network=${NET_NAME} --network-alias=comment ${USER_R}/comment:1.0
 	@docker run -d --network=${NET_NAME} -p 9292:9292 ${USER_R}/ui:1.0
 
+run_2:
+	@printf "Запуск всех контейнеров ${NAME}...\n"
+	@docker run -d --network=${NET_NAME} --network-alias=post_db2 --network-alias=comment_db2 mongo:${MONGO_V}
+	@docker run -d --network=${NET_NAME} --network-alias=post2 -e POST_DATABASE_HOST=post_db2 ${USER_R}/post:1.0
+	@docker run -d --network=${NET_NAME} --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 ${USER_R}/comment:1.0
+	@docker run -d --network=${NET_NAME} -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 ${USER_R}/ui:1.0
+
+## останавливаем все контейнейры
+stop:
+	@docker stop $$(docker ps -aq) 2>/dev/null || echo "ERROR: docker stop"
+
+## запускаем все контейнейры
+start:
+	@docker start $$(docker ps -aq) 2>/dev/null || echo "ERROR: docker start"
+
 fclean:
 	@printf "Полная очистка всех конфигураций ${NAME}...\n"
 	@docker stop $$(docker ps -qa) 2>/dev/null && echo "SUCCESS: docker stop" || echo "ERROR: docker stop"
