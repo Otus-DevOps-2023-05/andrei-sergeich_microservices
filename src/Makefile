@@ -34,10 +34,14 @@ run:
 
 run_2:
 	@printf "Запуск всех контейнеров ${NAME}...\n"
-	@docker run -d --network=${NET_NAME} --network-alias=post_db2 --network-alias=comment_db2 mongo:${MONGO_V}
-	@docker run -d --network=${NET_NAME} --network-alias=post2 -e POST_DATABASE_HOST=post_db2 ${USER_R}/post:1.0
-	@docker run -d --network=${NET_NAME} --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 ${USER_R}/comment:1.0
-	@docker run -d --network=${NET_NAME} -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 ${USER_R}/ui:1.0
+#	@docker run -d --network=${NET_NAME} --network-alias=post_db2 --network-alias=comment_db2 mongo:${MONGO_V}
+#	@docker run -d --network=${NET_NAME} --network-alias=post2 -e POST_DATABASE_HOST=post_db2 ${USER_R}/post:1.0
+#	@docker run -d --network=${NET_NAME} --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 ${USER_R}/comment:1.0
+#	@docker run -d --network=${NET_NAME} -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 ${USER_R}/ui:1.0
+	@docker run -d --network=front_net -p 9292:9292 --name ui  ${USER_R}/ui:1.0
+	@docker run -d --network=back_net --name comment  ${USER_R}/comment:1.0
+	@docker run -d --network=back_net --name post  ${USER_R}/post:1.0
+	@docker run -d --network=back_net --name mongo_db --network-alias=post_db --network-alias=comment_db mongo:${MONGO_V}
 
 ## останавливаем все контейнейры
 stop:
