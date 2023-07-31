@@ -23,6 +23,18 @@
     eval $(docker-machine env docker-host)
     ```
 
+* **ИЗ КОРНЯ РЕПОЗИТОРИЯ** выполнить сборку образов при помощи скриптов ```docker_build.sh```:
+
+    ``` bash
+    for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
+    ```
+
+* перейти в каталог **docker**, выполнить
+
+    ``` bash
+    docker compose up -d
+    ```
+
 ---
 
 ## ДЗ по модулю "Сетевое взаимодействие Docker контейнеров. Docker Compose. Тестирование образов"
