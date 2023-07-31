@@ -2,6 +2,12 @@
 
 ## ДЗ по модулю "Введение в мониторинг. Модели и принципы работы систем мониторинга"
 
+* С помощью ```yc cli``` создал инстанс в облаке (команды обернул в скрипты)
+* С помощью ```docker-machine``` инициализировал на инстансе докер хост систему (команды обернул в скрипты)
+* Собрал образы микросервисов, ***Prometheus***
+* Развернул на инстансе ***Prometheus*** и ***Node exporter***
+* Запушил образы микросервисов и ***Prometheus*** в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general)
+
 Для сборки:
 
 * перейти в каталог **monitoring**
@@ -29,11 +35,22 @@
     for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
     ```
 
+* перейти в каталог **monitoring/prometheus**, выполнить сборку образа ```prometheus``` при помощи команды:
+
+    ``` bash
+    docker build -t $USER_NAME/prometheus . # USER_NAME = логин на DockerHub
+    ```
+
 * перейти в каталог **docker**, выполнить
 
     ``` bash
     docker compose up -d
     ```
+
+Для проверки:
+
+* открыть в браузере <http://IP_адрес_созданной_VM:9090>
+* открыть в браузере <http://IP_адрес_созданной_VM:9292>
 
 ---
 
