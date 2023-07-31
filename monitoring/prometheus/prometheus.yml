@@ -1,0 +1,19 @@
+---
+global:
+  scrape_interval: '5s' # С какой частотой собирать метрики
+
+scrape_configs:
+  - job_name: 'prometheus' # Джобы объединяют в группы endpoint-ы, выполняющие одинаковую функцию
+    static_configs:
+      - targets:
+        - 'localhost:9090' # Адреса для сбора метрик (endpoints)
+
+  - job_name: 'ui'
+    static_configs:
+      - targets:
+        - 'ui:9292'
+
+  - job_name: 'comment'
+    static_configs:
+      - targets:
+        - 'comment:9292'
