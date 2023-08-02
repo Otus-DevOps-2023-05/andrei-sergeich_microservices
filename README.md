@@ -7,44 +7,26 @@
 * Собрал образы микросервисов, ***Prometheus***
 * Развернул на инстансе ***Prometheus*** и ***Node exporter***
 * Запушил образы микросервисов и ***Prometheus*** в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general)
+* Написал Makefile для автоматизации действий
 
 Для сборки:
 
-* перейти в каталог **monitoring**
-* поднять инстанс, запустив скрипт:
+* перейти в каталог **monitoring**, выполнить
 
     ``` bash
-    bash infra_create.sh
+    make
     ```
 
-* запустить ```docker-machine``` на удаленном хосте:
+  > [!NOTE]\
+  > не забываем переключаться на удаленный докер демон в Yandex Cloud:\
+    ```eval $(docker-machine env docker-host)```
+
+Для отправки образов в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general):
+
+* перейти в каталог **monitoring**, выполнить
 
     ``` bash
-    bash env_init.sh
-    ```
-
-* переключиться на удаленный докер демон в Yandex Cloud:
-
-    ``` bash
-    eval $(docker-machine env docker-host)
-    ```
-
-* **ИЗ КОРНЯ РЕПОЗИТОРИЯ** выполнить сборку образов при помощи скриптов ```docker_build.sh```:
-
-    ``` bash
-    for i in ui post-py comment; do cd src/$i; bash docker_build.sh; cd -; done
-    ```
-
-* перейти в каталог **monitoring/prometheus**, выполнить сборку образа ```prometheus``` при помощи команды:
-
-    ``` bash
-    docker build -t $USER_NAME/prometheus . # USER_NAME = логин на DockerHub
-    ```
-
-* перейти в каталог **docker**, выполнить
-
-    ``` bash
-    docker compose up -d
+    make push
     ```
 
 Для проверки:
