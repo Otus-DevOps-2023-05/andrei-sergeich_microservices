@@ -17,7 +17,6 @@ infra_create:
 		--network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
 		--create-boot-disk image-folder-id=standard-images,image-family=ubuntu-1804-lts,size=15 \
 		--ssh-key ${SSH_P_KEY_PATH}
-	# @yc compute instance show --name ${VM_NAME} 2>/dev/null && echo "SUCCESS: instance with name "${VM_NAME}" successfully creating" || echo "ERROR: instance with name "${VM_NAME}" not found"
 
 env_init:
 	@printf "Создание docker-machine...\n"
@@ -27,34 +26,32 @@ env_init:
 		--generic-ssh-user ${VM_SSH_USER} \
 		--generic-ssh-key ${SSH_KEY_PATH} \
 		${VM_NAME}
-	# @docker-machine ls | grep ${VM_NAME} 2>/dev/null && echo "SUCCESS: docker-machine with name "${VM_NAME}" successfully creating" || echo "ERROR: docker-machine with name "${VM_NAME}" not found"
 
 build:
 	@printf "Сборка локальных образов ${NAME}...\n"
-	@${MACHINE_CHECKOUT} ; \
-		docker build -t ${USER_NAME}/prometheus ./prometheus ; \
-		export USER_NAME=${USER_NAME} ; \
-		cd ../src/post-py && bash docker_build.sh ; \
-		cd - && \
-		cd ../src/comment && bash docker_build.sh ; \
-		cd - && \
-		cd ../src/ui && bash docker_build.sh
+	@${MACHINE_CHECKOUT} && \
+		docker build -t ${USER_NAME}/prometheus ./prometheus && \
+		export USER_NAME=${USER_NAME} && \
+		cd ../src/ui && bash docker_build.sh && \
+		cd ../post-py && bash docker_build.sh && \
+		cd ../comment && bash docker_build.sh
 
 run:
 	@printf "Запуск сервисов ${NAME}...\n"
-	@${MACHINE_CHECKOUT} ; docker-compose -f ../docker/docker-compose.yml up -d
+	@${MACHINE_CHECKOUT} && docker-compose -f ../docker/docker-compose.yml up -d
 
 push:
 	@printf "Отправка образов в DockerHub...\n"
-	@${MACHINE_CHECKOUT} ; \
-		export USER_NAME=${USER_NAME} ; \
-		docker push ${USER_NAME}/ui ; \
-		docker push ${USER_NAME}/comment ; \
-		docker push ${USER_NAME}/post ; \
+	@${MACHINE_CHECKOUT} && \
+		export USER_NAME=${USER_NAME} && \
+		docker push ${USER_NAME}/ui && \
+		docker push ${USER_NAME}/comment && \
+		docker push ${USER_NAME}/post && \
 		docker push ${USER_NAME}/prometheus
 
 clean:
-	@${MACHINE_CHECKOUT} ; docker-compose -f ../docker/docker-compose.yml rm --force
+	@printf "Остановка и удаление сервисов ${NAME}...\n"
+	@${MACHINE_CHECKOUT} && docker-compose -f ../docker/docker-compose.yml down
 
 fclean:
 	@printf "Полная очистка всех конфигураций ${NAME}...\n"
