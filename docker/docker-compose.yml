@@ -59,6 +59,17 @@ services:
     - '--path.procfs=/host/proc'
     - '--path.sysfs=/host/sys'
     - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+  mongo-exporter:
+    image: percona/mongodb_exporter:0.39.0
+    networks:
+      - back_net
+    ports:
+      - '9216:9216'
+      - '17001:17001'
+    command:
+    - '--mongodb.uri=mongodb://post_db:27017'
+    - '--discovering-mode'
+    - '--collect-all'
 
 volumes:
   post_db:

@@ -8,6 +8,7 @@
 * Развернул на инстансе ***Prometheus*** и ***Node exporter***
 * Запушил образы микросервисов и ***Prometheus*** в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general)
 * Написал Makefile для автоматизации действий
+* Добавил в ***Prometheus*** мониторинг ***MongoDB*** с использованием экспортера
 
 Для сборки:
 
