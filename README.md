@@ -7,8 +7,12 @@
 * Собрал образы микросервисов, ***Prometheus***
 * Развернул на инстансе ***Prometheus*** и ***Node exporter***
 * Запушил образы микросервисов и ***Prometheus*** в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general)
-* Написал Makefile для автоматизации действий
-* Добавил в ***Prometheus*** мониторинг ***MongoDB*** с использованием экспортера
+* Написал Makefile для автоматизации действий (полная сборка проекта + отдельно push в [DockerHub](https://hub.docker.com/repository/docker/cmero/prometheus/general))
+* Добавил в ***Prometheus*** мониторинг ***MongoDB*** с использованием экспортера (версия образа последняя стабильная)
+* Добавил в ***Prometheus*** мониторинг сервисов `comment`, `post`, `ui` с помощью ***blackbox exporter*** (версия образа последняя стабильная)
+  > [!WARNING]\
+  > НЕ удалять из файла `prometheus.yaml` комментарий `# Target to probe with http on port 9292.` \
+  > по нему `sed`'ом в `Makefile` идет поиск IP VM для замены на актуальны при пересоздании VM
 
 Для сборки:
 
@@ -32,8 +36,8 @@
 
 Для проверки:
 
-* открыть в браузере <http://IP_адрес_созданной_VM:9090>
-* открыть в браузере <http://IP_адрес_созданной_VM:9292>
+* мониторинг - открыть в браузере <http://IP_адрес_созданной_VM:9090>
+* приложение - открыть в браузере <http://IP_адрес_созданной_VM:9292>
 
 ---
 

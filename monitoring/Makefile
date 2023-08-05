@@ -29,6 +29,7 @@ env_init:
 
 build:
 	@printf "Сборка локальных образов ${NAME}...\n"
+	@sed -i '/9292\.$\/s/\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}/${VM_IP_ADDRESS}/' prometheus/prometheus.yml
 	@${MACHINE_CHECKOUT} && \
 		docker build -t ${USER_NAME}/prometheus ./prometheus && \
 		export USER_NAME=${USER_NAME} && \

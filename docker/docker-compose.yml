@@ -70,6 +70,12 @@ services:
     - '--mongodb.uri=mongodb://post_db:27017'
     - '--discovering-mode'
     - '--collect-all'
+  blackbox-exporter:
+      image: prom/blackbox-exporter:v0.24.0
+      ports:
+        - 9115:9115/tcp
+      networks:
+        - front_net
 
 volumes:
   post_db:
