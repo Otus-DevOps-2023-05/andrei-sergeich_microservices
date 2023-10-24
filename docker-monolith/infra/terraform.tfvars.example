@@ -1,0 +1,11 @@
+cloud_id         = "dfdfhk845214gcfnhfg84"
+folder_id        = "dfkghjdf845641fghffdf"
+zone             = "ru-central1-a"
+image_id         = "idiojfdjg8452df"
+docker_image_id  = "fgzhgfj984jytj4"
+ssh_user         = "ubuntu"
+public_key_path  = "~/.ssh/public_key"
+private_key_path = "~/.ssh/private_key"
+subnet_id        = "dfhg7djhfj7f4gvfkj78g"
+token            = "auth_token"
+inst_count       = 1

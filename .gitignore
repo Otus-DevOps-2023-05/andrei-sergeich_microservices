@@ -1,0 +1,17 @@
+# Mains
+.vscode
+
+# Packer
+variables.json
+
+# Terraform
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/
+providers.tf
+
+# Ansible
+*.retry
+vault.key

@@ -1,0 +1,12 @@
+---
+- name: Start app
+  hosts: all
+  become: true
+  tasks:
+    - name: Pull image and run container
+      community.docker.docker_container:
+        name: "reddit"
+        image: "cmero/otus-reddit:1.0"
+        ports:
+          - 9292:9292
+        detach: true

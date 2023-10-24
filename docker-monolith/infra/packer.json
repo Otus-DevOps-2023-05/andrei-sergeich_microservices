@@ -1,0 +1,26 @@
+{
+    "builders": [
+        {
+            "type": "yandex",
+            "token": "{{user `auth_token`}}",
+            "folder_id": "{{user `folder_id`}}",
+            "source_image_id": "{{user `source_image_id`}}",
+            "image_name": "ubuntu1604-docker-{{timestamp}}",
+            "image_family": "ubuntu1604-docker",
+            "image_description": "A Ubuntu 16.04 base image with docker installed",
+            "ssh_username": "{{user `ssh_username`}}",
+            "use_ipv4_nat": "true",
+            "subnet_id": "{{user `subnet_id`}}",
+            "zone": "{{user `zone`}}",
+            "platform_id": "standard-v1"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "ansible",
+            "user": "{{user `ssh_username`}}",
+            "playbook_file": "install_docker.yml",
+            "use_proxy": "false"
+        }
+    ]
+}
