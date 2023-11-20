@@ -1,4 +1,4 @@
-NAME     = DOCKER-3
+NAME     = DOCKER-HW
 USER_R   = cmero
 MONGO_V  = 5.0
 NET_NAME = reddit
@@ -26,25 +26,30 @@ vol_create:
 
 run:
 	@printf "Запуск всех контейнеров ${NAME}...\n"
-	@docker run -d --network=${NET_NAME} --network-alias=post_db --network-alias=comment_db -v ${VOL_NAME}:/data/db mongo:${MONGO_V}
+	# @docker run -d --network=${NET_NAME} --network-alias=post_db --network-alias=comment_db -v ${VOL_NAME}:/data/db mongo:${MONGO_V}
+	@docker run -d --network=${NET_NAME} --network-alias=post_db --network-alias=comment_db mongo:${MONGO_V}
 	@docker run -d --network=${NET_NAME} --network-alias=post ${USER_R}/post:1.0
 	@docker run -d --network=${NET_NAME} --network-alias=comment ${USER_R}/comment:1.0
 	@docker run -d --network=${NET_NAME} -p 9292:9292 ${USER_R}/ui:1.0
 
 run_2:
 	@printf "Запуск всех контейнеров ${NAME}...\n"
-	@docker run -d --network=${NET_NAME} --network-alias=post_db2 --network-alias=comment_db2 mongo:${MONGO_V}
-	@docker run -d --network=${NET_NAME} --network-alias=post2 -e POST_DATABASE_HOST=post_db2 ${USER_R}/post:1.0
-	@docker run -d --network=${NET_NAME} --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 ${USER_R}/comment:1.0
-	@docker run -d --network=${NET_NAME} -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 ${USER_R}/ui:1.0
+#	@docker run -d --network=${NET_NAME} --network-alias=post_db2 --network-alias=comment_db2 mongo:${MONGO_V}
+#	@docker run -d --network=${NET_NAME} --network-alias=post2 -e POST_DATABASE_HOST=post_db2 ${USER_R}/post:1.0
+#	@docker run -d --network=${NET_NAME} --network-alias=comment2 -e COMMENT_DATABASE_HOST=comment_db2 ${USER_R}/comment:1.0
+#	@docker run -d --network=${NET_NAME} -p 9292:9292 -e POST_SERVICE_HOST=post2 -e COMMENT_SERVICE_HOST=comment2 ${USER_R}/ui:1.0
+	@docker run -d --network=front_net -p 9292:9292 --name ui  ${USER_R}/ui:1.0
+	@docker run -d --network=back_net --name comment  ${USER_R}/comment:1.0
+	@docker run -d --network=back_net --name post  ${USER_R}/post:1.0
+	@docker run -d --network=back_net --name mongo_db --network-alias=post_db --network-alias=comment_db mongo:${MONGO_V}
 
 ## останавливаем все контейнейры
 stop:
-	@docker stop $$(docker ps -aq) 2>/dev/null || echo "ERROR: docker stop"
+	@docker stop $$(docker ps -aq) 2>/dev/null && echo "SUCCESS: docker stop" || echo "ERROR: docker stop"
 
 ## запускаем все контейнейры
 start:
-	@docker start $$(docker ps -aq) 2>/dev/null || echo "ERROR: docker start"
+	@docker start $$(docker ps -aq) 2>/dev/null && echo "SUCCESS: docker start" || echo "ERROR: docker start"
 
 fclean:
 	@printf "Полная очистка всех конфигураций ${NAME}...\n"
@@ -56,4 +61,4 @@ fclean:
 
 re:	fclean all
 
-.PHONY: all pull build network run fclean re
+.PHONY: all pull build net_create vol_create run run_2 stop start fclean re
