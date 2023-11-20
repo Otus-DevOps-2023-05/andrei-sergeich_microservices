@@ -1,0 +1,92 @@
+version: '3.3'
+services:
+  post_db:
+    image: mongo:${MONGO_VERSION}
+    volumes:
+      - post_db:/data/db
+    networks:
+      back_net:
+        aliases:
+          - "post_db"
+          - "comment_db"
+  ui:
+    image: ${USER_NAME}/ui:${UI_VERSION}
+    ports:
+      - ${REDDIT_PORT}:${REDDIT_PORT}/tcp
+    networks:
+      - front_net
+  post:
+    image: ${USER_NAME}/post:${POST_VERSION}
+    networks:
+      back_net:
+        aliases:
+          - "post"
+      front_net:
+        aliases:
+          - "post"
+  comment:
+    image: ${USER_NAME}/comment:${COMMENT_VERSION}
+    networks:
+      back_net:
+        aliases:
+          - "comment"
+      front_net:
+        aliases:
+          - "comment"
+  prometheus:
+    image: ${USER_NAME}/prometheus
+    networks:
+      - back_net
+      - front_net
+    ports:
+    - '9090:9090'
+    volumes:
+    - prometheus_data:/prometheus
+    command: # Передаем доп параметры в командной строке
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/prometheus'
+    - '--storage.tsdb.retention=1d' # Задаем время хранения метрик в 1 день
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    networks:
+      - back_net
+    user: root
+    volumes:
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /:/rootfs:ro
+    command:
+    - '--path.procfs=/host/proc'
+    - '--path.sysfs=/host/sys'
+    - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+  mongo-exporter:
+    image: percona/mongodb_exporter:0.39.0
+    networks:
+      - back_net
+    ports:
+      - '9216:9216'
+      - '17001:17001'
+    command:
+    - '--mongodb.uri=mongodb://post_db:27017'
+    - '--discovering-mode'
+    - '--collect-all'
+  blackbox-exporter:
+      image: prom/blackbox-exporter:v0.24.0
+      ports:
+        - 9115:9115/tcp
+      networks:
+        - front_net
+
+volumes:
+  post_db:
+  prometheus_data:
+
+networks:
+  back_net:
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+  front_net:
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
